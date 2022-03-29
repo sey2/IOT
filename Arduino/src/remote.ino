@@ -36,7 +36,7 @@ void loop() {
         }
         else if (IrReceiver.decodedIRData.decodedRawData == 4077715200) { /*  도 (1) */
               Serial.println("Pressed 1 Button");
-              IrReceiver.stop();    // 멈추고 다시 시작을 안해주면 처음 누를 땐 정확한 값이 나오는데 그렇지 않으면 계속 쓰레기 값 나옴
+              IrReceiver.stop();    // 멈추고 다시 시작을 안해주면 처음 누를 땐 정확한 값이 나오는데 그 후 계속 쓰레기 값 나옴
               tone(3,523,1000); 
               delay(8);
               IrReceiver.start(8000);
