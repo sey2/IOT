@@ -27,12 +27,12 @@ void loop() {
 
         
         if (myRawData == 3927310080) {  /* + */
-             brightness += (brightness+10 <= 255) ? 10 : 0;
+             brightness += (brightness + 50 <= 255) ? 50 : 0;
              ledBrightness(brightness);
              Serial.println("Pressed + Button");
         }
         else if (myRawData == 4161273600) { /* - */
-              brightness -= (brightness-10 >= 0) ? 10 : 0;
+              brightness -= (brightness - 50 >= 0) ? 50 : 0;
               ledBrightness(brightness);
               Serial.println("Pressed - Button");
         }
