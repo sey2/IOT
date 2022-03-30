@@ -1,68 +1,71 @@
 #include <IRremote.hpp>
 #include <Arduino.h>
-
-/*
- * Define macros for input and output pin etc.
- */
+ 
 #include "PinDefinitionsAndMore.h"
 
+int ledPin = 9;
 void setup() {
     Serial.begin(9600);
-
-    // led 핀 출력 설정
-    pinMode(9, OUTPUT);
     
     Serial.println("Start");  // Print Start
 
-    IrReceiver.enableIRIn();
-    IrReceiver.begin(11, DISABLE_LED_FEEDBACK); // Start receiver
+    IrReceiver.begin(IR_RECEIVE_PIN, DISABLE_LED_FEEDBACK); // or IrReceiver.enableIRIn();  Start receiver
+
+     // led 핀 출력 설정
+    pinMode(ledPin, OUTPUT);
 }
 
+int brightness = 0;
+
+int toneArray[] = {523, 587, 659, 698};
 void loop() {
-
     if (IrReceiver.decode()) {
-
         Serial.println();
-
-        Serial.println(IrReceiver.decodedIRData.decodedRawData,DEC);
         
-        if (IrReceiver.decodedIRData.decodedRawData == 3927310080) {  /* + */
+        uint32_t myRawData = IrReceiver.decodedIRData.decodedRawData;
+        Serial.println(myRawData,DEC);
+
+        
+        if (myRawData == 3927310080) {  /* + */
+             brightness += (brightness+10 <= 255) ? 10 : 0;
+             ledBrightness(brightness);
              Serial.println("Pressed + Button");
-             analogWrite(9, 50);
         }
-        else if (IrReceiver.decodedIRData.decodedRawData == 4161273600) { /* - */
-              analogWrite(9, 255);  
+        else if (myRawData == 4161273600) { /* - */
+              brightness -= (brightness-10 >= 0) ? 10 : 0;
+              ledBrightness(brightness);
               Serial.println("Pressed - Button");
         }
-        else if (IrReceiver.decodedIRData.decodedRawData == 4077715200) { /*  도 (1) */
+        else if (myRawData == 4077715200) { /*  도 (1) */
+              playTone(523);
               Serial.println("Pressed 1 Button");
-              IrReceiver.stop();    // 멈추고 다시 시작을 안해주면 처음 누를 땐 정확한 값이 나오는데 그 후 계속 쓰레기 값 나옴
-              tone(3,523,1000); 
-              delay(8);
-              IrReceiver.start(8000);
         }
-        else if (IrReceiver.decodedIRData.decodedRawData == 3877175040) { /* 레(2) */
+        else if (myRawData == 3877175040) { /* 레(2) */        
+              playTone(587);
               Serial.println("Pressed 2 Button");
-              IrReceiver.stop();
-              tone(3,587,1000); 
-              delay(8);
-              IrReceiver.start(8000);
         }
-        else if (IrReceiver.decodedIRData.decodedRawData == 2707357440) { /* 미(3) */
+        else if (myRawData == 2707357440) { /* 미(3) */        
+              playTone(659);    
               Serial.println("Pressed 3 Button");
-              IrReceiver.stop();
-              tone(3,659,1000);
-              delay(8);
-              IrReceiver.start(8000);      
         }
-        else if (IrReceiver.decodedIRData.decodedRawData == 4144561920) { /* 파(4) */
-              Serial.println("Pressed 4 Button");
-              IrReceiver.stop();
-              tone(3,698,1000);  
-              delay(8);
-              IrReceiver.start(8000);      
+        else if (myRawData == 4144561920) { /* 파(4) */              
+              playTone(698);
+              Serial.println("Pressed 4 Button"); 
         }
         IrReceiver.resume(); // receive the next value
        
     }      delay(30);
 }
+
+void ledBrightness(int brightness){
+   IrReceiver.stop();
+   analogWrite(ledPin, brightness); 
+   IrReceiver.start(8000);  
+}
+
+void playTone(int toneData){
+   IrReceiver.stop();    // 멈추고 다시 시작을 안해주면 처음 누를 땐 정확한 값이 나오는데 그렇지 않으면 계속 쓰레기 값 나옴
+   tone(TONE_PIN, toneData, 500);  
+   IrReceiver.start(8000);
+}
+
