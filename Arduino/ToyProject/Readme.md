@@ -12,3 +12,8 @@
 - 온도 센서
 - 거리 감지 센서
 - 서보 모터
+
+
+----
+
+https://eduino.kr/product/detail.html?product_no=984&cate_no=55&display_group=1
