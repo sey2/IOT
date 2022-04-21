@@ -11,22 +11,28 @@ Stepper myStepper(rotation180, 8, 10, 11 , 9);
 int buttonA = 4;
 int buttonB = 5;
 
+float tem;  // 온도를 담기 위한 변수 
+int cdsValue;     // 조도센서 값
+int buttonA_State;  // 버튼 A 플래그
+int buttonB_State;  // 버튼 B 플래그전int cdsValue;   
+
 boolean autoMode = true; // 초기 설정은 자동모드
 boolean blindState = true; //  블라인드 업(true)/다운 (false)
 
 DHT dht(DHTPIN, DHTTYPE);
 
 /* 컴퓨터 공학과 20184494 박세영
- *  스마트폰을 가까이 댈때의 조도 센서 값은 200 이상으로 지정 하였습니다. 
- * 버튼 데이터 값, 온도, 밝기 데이터를 확인하고 싶으면 loop() 메서드의 printDebug() 메서드의 주석을 푸시면 됩니다. 
- * 버튼 A,B를 누를 때 1.5초 정도 눌러 주세요, 바로 눌렀다 때면 버튼 값을 잘 못 읽을 수 있습니다. 
- * 자동 모드일 때 블라인드가 계속 작동하지 않게 하기 위해 반 바퀴 회전을 하고, 감
+ *  스마트폰을 가까이 댈 때의 조도 센서 값은 200 이상으로 지정 하였습니다. 
+ * 버튼 데이터 값, 온도, 밝기 데이터를 확인하고 싶으면 loop() 메서드안의 printDebug() 메서드의 주석을 푸시면 됩니다. 
+ * 버튼 A,B를 누를 때 1.5초 정도 눌러 주세요. 바로 눌렀다 때면 버튼 값을 잘 못 읽을 수 있습니다. 
+ * 자동 모드일 때 블라인드가 계속 작동하지 않게 하기 위해 반 바퀴 회전을 하고, 
  * 똑같은 상태에서 블라인드가 작동하게 되면 블라인드가 끝까지 내려감 / 올라감 메시지가 나옵니다. 
  * 밝기 / 온도 상태를 바꾸면 블라인드가 반대로 다시 작동 합니다. 
- * EX) 블라인드가 끝까지 올라감 메시지가 나왔을때 스마트폰 후레시를 조도 센서에 가까이 대면 블라인드가 내려감
+ * EX) 블라인드가 끝까지 올라감 메시지가 나왔을 때 스마트폰 후레시를 조도 센서에 가까이 대면 블라인드가 내려갑니다.
  */
 
 void setup() {
+
   myStepper.setSpeed(14);
 
   pinMode(buttonA, INPUT);
@@ -34,15 +40,15 @@ void setup() {
 
   Serial.begin(9600);
   Serial.println("start");
+
+  myStepper.step(rotation180/2);  // 블라인드 초기 값 중간 값으로 설정
+  tem = 25;   // 온도 초기 값 설정 
+  cdsValue = 512;   // 밝기 중간 값으로 설정 
+  
   dht.begin();
 
 }
 
-int cdsValue;     // 조도센서 값
-int buttonA_State;  // 버튼 A 플래그
-int buttonB_State;  // 버튼 B 플래그전
-
-float tem;  // 온도를 담기 위한 변수 
 
 boolean upFlag = true;    // 블라인드를 올릴 수 있으면 true (블라인드가 다 올라가지 않았으면), 블라인드를 내릴 수 있으면 false (블라인드가 다 내려가지 않았으면)
 
