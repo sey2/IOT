@@ -17,19 +17,19 @@ void loop() {
 
     if (received_data == 0) {
       digitalWrite(pin_LED1, LOW);
-      Serial.println(“Received Data 0");
+      Serial.println("Received Data 0");
      }
     if(received_data == 1){
       digitalWrite(pin_LED1, HIGH);
-      Serial.println(“Received Data 1");
+      Serial.println("Received Data 1");
     }
     if (received_data == 2) {
       digitalWrite(pin_LED2, LOW);
-      Serial.println(“Received Data 2");
+      Serial.println("Received Data 2");
      }
     if(received_data == 3){
       digitalWrite(pin_LED2, HIGH);
-      Serial.println(“Received Data 3");
+      Serial.println("Received Data 3");
     }
   }
 }
