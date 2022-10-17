@@ -20,6 +20,7 @@ public class NaverActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://naver.com"));
+               // setResult(RESULT_OK, intent);
                 startActivity(intent);
             }
         });
